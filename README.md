@@ -22,9 +22,9 @@ Asigurați-vă că sunteți în folderul `backend`.
 
 ```bash
 cd backend
-# Dacă aveți un mediu virtual (venv), activați-l.
+# Activați mediul virtual (venv)
 # Ex: .\venv\Scripts\activate
-pip install -r requirements.txt # (Dacă există)
+pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 Serverul va rula implicit la adresa `http://localhost:8000`.
