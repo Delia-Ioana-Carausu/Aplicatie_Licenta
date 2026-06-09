@@ -6,3 +6,4 @@ python-jose
 python-dotenv
 websockets
 pydantic
+python-multipart

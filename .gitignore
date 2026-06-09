@@ -4,6 +4,8 @@ backend/venv/
 venv/
 env/
 .env
+frontend/build/
+.tmp_pip/
 
 # Python
 __pycache__/
@@ -15,6 +17,15 @@ __pycache__/
 *.db
 *.sqlite3
 backend/users.db
+
+# Thesis/documentation assets kept local
+Proiect_Diploma_CărăușuDelia.docx
+Proiect_Diploma_CărăușuDelia.pdf
+Piese_robot\[1\].docx
+hardware/
+poze_coppelia/
+poze_proiectare/
+roata.jpeg
 
 # OS generated files
 .DS_Store
