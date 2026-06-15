@@ -94,13 +94,15 @@ class ConnectionManager:
     async def connect_client(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
+        robot_is_online = self.robot_connection is not None
         await websocket.send_text(json.dumps({
             "type": "robot_connection",
-            "payload": {"connected": self.robot_connection is not None}
+            "payload": {"connected": robot_is_online}
         }))
-        if self.latest_telemetry:
+        # Only send cached data if the robot is currently connected
+        if robot_is_online and self.latest_telemetry:
             await websocket.send_text(json.dumps(self.latest_telemetry))
-        if self.latest_video:
+        if robot_is_online and self.latest_video:
             await websocket.send_text(json.dumps(self.latest_video))
 
     def disconnect_client(self, websocket: WebSocket):
@@ -118,10 +120,24 @@ class ConnectionManager:
 
     async def disconnect_robot(self):
         self.robot_connection = None
-        print("Robot disconnected!")
+        self.latest_telemetry = None
+        self.latest_video = None
+        print("Robot disconnected! All cached data cleared.")
+
+        # Reset global robot status
+        robot_status["robotConectat"] = False
+        robot_status["miscare"] = "inactiv"
+        robot_status["ultimaActualizare"] = None
+        robot_status["telemetrie"] = None
+
         await self.broadcast(json.dumps({
             "type": "robot_connection",
             "payload": {"connected": False}
+        }))
+        # Notify all clients to reset their local data
+        await self.broadcast(json.dumps({
+            "type": "data_reset",
+            "payload": {"reason": "robot_disconnected"}
         }))
 
     async def broadcast(self, message: str):
